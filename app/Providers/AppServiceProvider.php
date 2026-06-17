@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 
 // Import semua Model yang ingin diawasi
 use App\Models\Product;
@@ -33,6 +34,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (app()->environment('production') || env('APP_ENV') === 'production') {
+            URL::forceScheme('https');
+        }
+
         // Daftarkan model ke masing-masing observer di sini
         Product::observe(ProductObserver::class);
         StockMovement::observe(StockMovementObserver::class);
